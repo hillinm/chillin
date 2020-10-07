@@ -9,6 +9,7 @@ export default function Form() {
     email: "",
     password: "",
     passwordConfirm: "",
+    role: "",
     terms: ""
   });
 
@@ -18,9 +19,13 @@ export default function Form() {
     email: "",
     password: "",
     passwordConfirm: "",
+    role: "",
     terms: ""
   });
 
+  const blackList = [
+    'waffle@syrup.com'
+  ]
   // control whether or not the form can be submitted if there are errors in form validation (in the useEffect)
   const [buttonIsDisabled, setButtonIsDisabled] = useState(true);
 
@@ -74,9 +79,9 @@ export default function Form() {
   // Add a schema, used for all validation to determine whether the input is valid or not
   const formSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
-    email: yup.string().email().required("Email is required"),
+    email: yup.string().email().notOneOf(blackList, 'That email is already taken.').required("Email is required"),
     password: yup.string().min(8, 'Password must contain 8 characters').required("Password is required"),
-    passwordConfirm: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required("Password is required"),
+    passwordConfirm: yup.string().oneOf([yup.ref('password')], "Passwords Must Match").required("Password is required"),
     terms: yup.boolean().oneOf([true], 'User must agree to Terms of Service')
   });
 
@@ -138,6 +143,23 @@ export default function Form() {
       {errors.passwordConfirm.length > 0 ? (
           <p className="error">{errors.passwordConfirm}</p>
         ) : null}
+      <label htmlFor="role">Role:</label>
+      <select
+        onChange={(event) => {
+          setFormState({ ...formState, [event.target.name]: event.target.value });
+        }}
+        id="role"
+        type="text"
+        placeholder="Enter Role"
+        value={formState.role}
+        name="role"
+      >
+          <option>--- Select Role ---</option>
+          <option>Student</option>
+          <option>Team Lead</option>
+          <option>Hacker</option>
+          <option>Slacker</option>
+      </select>
       <label htmlFor="terms" className="terms">
         <input
           type="checkbox"
@@ -145,12 +167,12 @@ export default function Form() {
           name="terms"
           checked={formState.terms}
           onChange={inputChange}
-        />
-        Terms of Service
+        />Terms of Service
         {errors.terms.length > 0 ? (
           <p className="error">{errors.terms}</p>
         ) : null}
       </label>
+
       <button type="submit" disabled={buttonIsDisabled}>
         Submit
       </button>
