@@ -81,7 +81,7 @@ export default function Form() {
     name: yup.string().required("Name is required"),
     email: yup.string().email().notOneOf(blackList, 'That email is already taken.').required("Email is required"),
     password: yup.string().min(8, 'Password must contain 8 characters').required("Password is required"),
-    passwordConfirm: yup.string().oneOf([yup.ref('password')], "Passwords Must Match").required("Password is required"),
+    passwordConfirm: yup.mixed().required("Password is required").oneOf([yup.ref('password')], "Passwords Must Match"),
     terms: yup.boolean().oneOf([true], 'User must agree to Terms of Service')
   });
 
@@ -131,7 +131,7 @@ export default function Form() {
         ) : null}
       </label>
       <label htmlFor="passwordConfirm">
-        Password Confirm
+        Confirm Password
         <input
           id="passwordConfirm"
           type="password"
