@@ -7,8 +7,7 @@ export default function Form() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
-    motivation: "",
-    positions: "",
+    password: "",
     terms: ""
   });
 
@@ -16,8 +15,7 @@ export default function Form() {
   const [errors, setErrors] = useState({
     name: "",
     email: "",
-    motivation: "",
-    positions: "",
+    password: "",
     terms: ""
   });
 
@@ -54,7 +52,6 @@ export default function Form() {
         name: "",
         email: "",
         password: "",
-        passwordConfirm: "",
         terms: ""
       });
     });
@@ -77,7 +74,6 @@ export default function Form() {
     name: yup.string().required("Name is required"),
     email: yup.string().email().required("Email is required"),
     password: yup.string().min(8).required("Password is required"),
-    passwordConfirm: yup.string().required("Password Confirmation is Required"),
     terms: yup.boolean().oneOf([true], 'User must agree to Terms of Service')
   });
 
@@ -122,16 +118,9 @@ export default function Form() {
           value={formState.password}
           onChange={inputChange}
         />
-      </label>
-      <label htmlFor="passwordConfirm">
-        Confirm Password
-        <input
-          id="passwordConfirm"
-          type="password"
-          name="passwordConfirm"
-          value={formState.passwordConfirm}
-          onChange={inputChange}
-        />
+        {errors.password < 0 ? (
+          <p className="error">{errors.password}</p>
+        ) : null}
       </label>
       <label htmlFor="terms" className="terms">
         <input
