@@ -8,6 +8,7 @@ export default function Form() {
     name: "",
     email: "",
     password: "",
+    passwordConfirm: "",
     terms: ""
   });
 
@@ -16,6 +17,7 @@ export default function Form() {
     name: "",
     email: "",
     password: "",
+    passwordConfirm: "",
     terms: ""
   });
 
@@ -25,7 +27,7 @@ export default function Form() {
   // managing state for errors. empty unless inline validation (validateInput) updates key/value pair to have error
 
   // temporary state used to display response from API. this is not a commonly used convention
-  const [post, setPost] = useState([]);
+  const [users, setUsers] = useState([]);
 
   // inline validation, validating one key/value pair at a time
   const validateChange = (e) => {
@@ -47,7 +49,7 @@ export default function Form() {
     e.preventDefault();
     axios.post("https://reqres.in/api/users", formState).then((response) => {
       console.log(response);
-      setPost(response.data);
+      setUsers(response.data);
       setFormState({
         name: "",
         email: "",
@@ -73,7 +75,8 @@ export default function Form() {
   const formSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
     email: yup.string().email().required("Email is required"),
-    password: yup.string().min(8).required("Password is required"),
+    password: yup.string().min(8, 'Password must contain 8 characters').required("Password is required"),
+    passwordConfirm: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required("Password is required"),
     terms: yup.boolean().oneOf([true], 'User must agree to Terms of Service')
   });
 
@@ -118,10 +121,23 @@ export default function Form() {
           value={formState.password}
           onChange={inputChange}
         />
-        {errors.password < 0 ? (
+        {errors.password.length > 0 ? (
           <p className="error">{errors.password}</p>
         ) : null}
       </label>
+      <label htmlFor="passwordConfirm">
+        Password Confirm
+        <input
+          id="passwordConfirm"
+          type="password"
+          name="passwordConfirm"
+          value={formState.passwordConfirm}
+          onChange={inputChange}
+        />
+      </label>
+      {errors.passwordConfirm.length > 0 ? (
+          <p className="error">{errors.passwordConfirm}</p>
+        ) : null}
       <label htmlFor="terms" className="terms">
         <input
           type="checkbox"
@@ -138,7 +154,7 @@ export default function Form() {
       <button type="submit" disabled={buttonIsDisabled}>
         Submit
       </button>
-      <pre>{JSON.stringify(post, null, 2)}</pre>
+      <pre>{JSON.stringify(users, null, 2)}</pre>
     </form>
   );
 }
