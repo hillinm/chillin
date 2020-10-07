@@ -90,7 +90,7 @@ export default function Form() {
       console.log("is my form valid", valid);
       setButtonIsDisabled(!valid);
     });
-  }, [formState]);
+  }, [formSchema, formState]);
   return (
     <form onSubmit={formSubmit}>
       <label htmlFor="name">
