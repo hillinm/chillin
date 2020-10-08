@@ -2,6 +2,7 @@ html, body{
   padding: 0;
   margin: 0;
   background-color: #32a4fd;
+  background-size: cover;
   background-image: url("./components/images/wallpaperflare.com_wallpaper_transparency.jpg");
 }
 
